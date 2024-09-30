@@ -1,34 +1,34 @@
 {
     "attributes": [
         {
-            "primary_attribute": "Appointment Management",
+            "primary_attribute": "Appointment Scheduling",
             "secondary_attributes": [
                 {
-                    "attribute": "Scheduling Process",
+                    "attribute": "Ease of Scheduling",
                     "tertiary_attributes": [
                         {
-                            "attribute": "Ease of booking appointments",
+                            "attribute": "Online Booking System",
                             "statements": [
                                 {
                                     "statement": "I love the fact that we can book online.",
                                     "sentiment_score": 0.9
                                 },
                                 {
-                                    "statement": "The appointment scheduling process was simple and quick.",
-                                    "sentiment_score": 0.8
+                                    "statement": "The online booking system is so convenient.",
+                                    "sentiment_score": 0.9
                                 },
                                 {
-                                    "statement": "I found the appointment scheduling process to be very easy.",
-                                    "sentiment_score": 0.9
+                                    "statement": "The appointment scheduling process was simple and quick.",
+                                    "sentiment_score": 0.8
                                 }
                             ]
                         },
                         {
-                            "attribute": "Availability of appointment slots",
+                            "attribute": "Appointment Availability",
                             "statements": [
                                 {
                                     "statement": "I got an appointment within a week of my call.",
-                                    "sentiment_score": 0.8
+                                    "sentiment_score": 0.6
                                 },
                                 {
                                     "statement": "I had my choice of days.",
@@ -36,46 +36,25 @@
                                 },
                                 {
                                     "statement": "I had to reschedule due to unavailability of slots.",
-                                    "sentiment_score": -0.6
+                                    "sentiment_score": -0.5
                                 }
                             ]
                         }
                     ]
                 },
                 {
-                    "attribute": "Waiting Time",
+                    "attribute": "Confirmation and Reminders",
                     "tertiary_attributes": [
                         {
-                            "attribute": "Time spent waiting for appointment",
+                            "attribute": "Reminder Notifications",
                             "statements": [
                                 {
-                                    "statement": "I was in the doctor’s office on schedule.",
+                                    "statement": "I received a confirmation call the day before my appointment.",
                                     "sentiment_score": 0.8
                                 },
                                 {
-                                    "statement": "The wait time in the clinic was way too long.",
-                                    "sentiment_score": -0.7
-                                },
-                                {
-                                    "statement": "I appreciated that I didn’t have to wait long to be seen.",
-                                    "sentiment_score": 0.9
-                                }
-                            ]
-                        },
-                        {
-                            "attribute": "Time on hold during calls",
-                            "statements": [
-                                {
-                                    "statement": "I spent little time on the phone.",
-                                    "sentiment_score": 0.6
-                                },
-                                {
-                                    "statement": "I had to wait on hold for 15 minutes before speaking to someone.",
-                                    "sentiment_score": -0.7
-                                },
-                                {
-                                    "statement": "Long time on hold.",
-                                    "sentiment_score": -0.5
+                                    "statement": "The automated appointment reminder was very helpful.",
+                                    "sentiment_score": 0.8
                                 }
                             ]
                         }
@@ -87,10 +66,10 @@
             "primary_attribute": "Staff Interaction",
             "secondary_attributes": [
                 {
-                    "attribute": "Staff Professionalism",
+                    "attribute": "Professionalism",
                     "tertiary_attributes": [
                         {
-                            "attribute": "Politeness of staff",
+                            "attribute": "Politeness of Staff",
                             "statements": [
                                 {
                                     "statement": "Staff was great! Love them.",
@@ -99,15 +78,11 @@
                                 {
                                     "statement": "The nurses are polite and professional, I feel safe here.",
                                     "sentiment_score": 0.9
-                                },
-                                {
-                                    "statement": "The receptionist was friendly but seemed distracted.",
-                                    "sentiment_score": 0.4
                                 }
                             ]
                         },
                         {
-                            "attribute": "Communication skills of staff",
+                            "attribute": "Communication Skills",
                             "statements": [
                                 {
                                     "statement": "The doctor explained everything very clearly and patiently.",
@@ -116,10 +91,6 @@
                                 {
                                     "statement": "I could not understand my doctor. His English was bad.",
                                     "sentiment_score": -0.7
-                                },
-                                {
-                                    "statement": "The nurse spoke too quickly for me to understand everything.",
-                                    "sentiment_score": -0.5
                                 }
                             ]
                         }
@@ -129,36 +100,15 @@
                     "attribute": "Responsiveness",
                     "tertiary_attributes": [
                         {
-                            "attribute": "Timeliness of responses",
+                            "attribute": "Timeliness of Response",
                             "statements": [
                                 {
-                                    "statement": "My questions were answered accurately and timely.",
-                                    "sentiment_score": 0.9
+                                    "statement": "I was not put on hold.",
+                                    "sentiment_score": 0.8
                                 },
                                 {
                                     "statement": "I could not reach the nurse over the phone.",
                                     "sentiment_score": -0.7
-                                },
-                                {
-                                    "statement": "Responsiveness of personnel too slow.",
-                                    "sentiment_score": -0.6
-                                }
-                            ]
-                        },
-                        {
-                            "attribute": "Attention to patient needs",
-                            "statements": [
-                                {
-                                    "statement": "The doctor showed concern for my symptoms.",
-                                    "sentiment_score": 0.9
-                                },
-                                {
-                                    "statement": "I felt rushed during my consultation with the doctor.",
-                                    "sentiment_score": -0.6
-                                },
-                                {
-                                    "statement": "I was scared and nobody comforted me.",
-                                    "sentiment_score": -0.9
                                 }
                             ]
                         }
@@ -167,42 +117,21 @@
             ]
         },
         {
-            "primary_attribute": "Facility Environment",
+            "primary_attribute": "Facility Experience",
             "secondary_attributes": [
                 {
                     "attribute": "Cleanliness",
                     "tertiary_attributes": [
                         {
-                            "attribute": "Hygiene standards",
+                            "attribute": "Overall Cleanliness",
                             "statements": [
                                 {
                                     "statement": "I love how clean the clinic was during my visit.",
                                     "sentiment_score": 0.9
                                 },
                                 {
-                                    "statement": "The waiting room is dirty and crowded. I'm scared to catch a disease.",
-                                    "sentiment_score": -0.8
-                                },
-                                {
                                     "statement": "I was not impressed with the hygiene standards.",
-                                    "sentiment_score": -0.7
-                                }
-                            ]
-                        },
-                        {
-                            "attribute": "Maintenance of facilities",
-                            "statements": [
-                                {
-                                    "statement": "The clinic was clean and well-organized.",
-                                    "sentiment_score": 0.9
-                                },
-                                {
-                                    "statement": "The facility was outdated but well-maintained.",
-                                    "sentiment_score": 0.3
-                                },
-                                {
-                                    "statement": "The bathrooms needed more attention.",
-                                    "sentiment_score": -0.4
+                                    "sentiment_score": -0.6
                                 }
                             ]
                         }
@@ -212,7 +141,7 @@
                     "attribute": "Comfort",
                     "tertiary_attributes": [
                         {
-                            "attribute": "Waiting area comfort",
+                            "attribute": "Waiting Area Comfort",
                             "statements": [
                                 {
                                     "statement": "The waiting area was spacious and well-lit.",
@@ -221,27 +150,88 @@
                                 {
                                     "statement": "The chairs in the waiting room were uncomfortable.",
                                     "sentiment_score": -0.5
-                                },
-                                {
-                                    "statement": "The waiting room was comfortable, but a little crowded.",
-                                    "sentiment_score": 0.3
                                 }
                             ]
-                        },
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "primary_attribute": "Communication and Information",
+            "secondary_attributes": [
+                {
+                    "attribute": "Clarity of Information",
+                    "tertiary_attributes": [
                         {
-                            "attribute": "Overall atmosphere",
+                            "attribute": "Post-Consultation Instructions",
                             "statements": [
                                 {
-                                    "statement": "The facility had a welcoming environment with a nice seating area.",
+                                    "statement": "I was provided with clear instructions after the procedure.",
                                     "sentiment_score": 0.9
                                 },
                                 {
-                                    "statement": "The clinic should have more parking spaces, it was crowded.",
+                                    "statement": "I wish the doctor had spent more time explaining the diagnosis.",
                                     "sentiment_score": -0.5
+                                }
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "attribute": "Access to Medical Records",
+                    "tertiary_attributes": [
+                        {
+                            "attribute": "Patient Portal Functionality",
+                            "statements": [
+                                {
+                                    "statement": "The clinic needs better integration of patient history into their system.",
+                                    "sentiment_score": -0.6
                                 },
                                 {
-                                    "statement": "The clinic was conveniently located in a central area.",
-                                    "sentiment_score": 0.9
+                                    "statement": "I couldn't find my medical history on the patient portal.",
+                                    "sentiment_score": -0.7
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "primary_attribute": "Wait Times",
+            "secondary_attributes": [
+                {
+                    "attribute": "Appointment Wait Time",
+                    "tertiary_attributes": [
+                        {
+                            "attribute": "Time Spent Waiting",
+                            "statements": [
+                                {
+                                    "statement": "I appreciated that I didn’t have to wait long to be seen.",
+                                    "sentiment_score": 0.8
+                                },
+                                {
+                                    "statement": "The wait time in the clinic was way too long.",
+                                    "sentiment_score": -0.7
+                                }
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "attribute": "Phone Wait Time",
+                    "tertiary_attributes": [
+                        {
+                            "attribute": "Hold Time",
+                            "statements": [
+                                {
+                                    "statement": "I had to wait on hold for 15 minutes before speaking to someone.",
+                                    "sentiment_score": -0.7
+                                },
+                                {
+                                    "statement": "I spent little time on the phone.",
+                                    "sentiment_score": 0.5
                                 }
                             ]
                         }
@@ -256,7 +246,7 @@
                     "attribute": "Transparency",
                     "tertiary_attributes": [
                         {
-                            "attribute": "Clarity of billing process",
+                            "attribute": "Clarity of Charges",
                             "statements": [
                                 {
                                     "statement": "The billing process was transparent.",
@@ -264,72 +254,21 @@
                                 },
                                 {
                                     "statement": "I was not informed about additional charges before my visit.",
-                                    "sentiment_score": -0.7
-                                },
-                                {
-                                    "statement": "The billing clerk was rude.",
-                                    "sentiment_score": -0.8
-                                }
-                            ]
-                        },
-                        {
-                            "attribute": "Insurance handling",
-                            "statements": [
-                                {
-                                    "statement": "My insurance claim was processed without any issues.",
-                                    "sentiment_score": 0.8
-                                },
-                                {
-                                    "statement": "The front desk helped me understand my insurance coverage.",
-                                    "sentiment_score": 0.8
-                                },
-                                {
-                                    "statement": "I wish there were more payment options available.",
-                                    "sentiment_score": -0.4
+                                    "sentiment_score": -0.6
                                 }
                             ]
                         }
                     ]
-                }
-            ]
-        },
-        {
-            "primary_attribute": "Technology and Accessibility",
-            "secondary_attributes": [
+                },
                 {
-                    "attribute": "Online Services",
+                    "attribute": "Insurance Processing",
                     "tertiary_attributes": [
                         {
-                            "attribute": "Ease of use of the website",
+                            "attribute": "Claim Processing Efficiency",
                             "statements": [
                                 {
-                                    "statement": "The clinic’s website was easy to use.",
-                                    "sentiment_score": 0.9
-                                },
-                                {
-                                    "statement": "The website should be more user-friendly for older patients.",
-                                    "sentiment_score": -0.4
-                                },
-                                {
-                                    "statement": "The online appointment system was convenient, but my medical records were missing.",
-                                    "sentiment_score": -0.6
-                                }
-                            ]
-                        },
-                        {
-                            "attribute": "Access to medical records",
-                            "statements": [
-                                {
-                                    "statement": "I wish I could access my test results directly on the website.",
-                                    "sentiment_score": -0.6
-                                },
-                                {
-                                    "statement": "I couldn't find my medical history on the patient portal.",
-                                    "sentiment_score": -0.7
-                                },
-                                {
-                                    "statement": "The patient portal is outdated and lacks proper functionality.",
-                                    "sentiment_score": -0.7
+                                    "statement": "My insurance claim was processed without any issues.",
+                                    "sentiment_score": 0.8
                                 }
                             ]
                         }

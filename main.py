@@ -153,7 +153,12 @@ class BusinessAnalysis(BaseModel):
     conclusions: str = Field(description="Summary and conclusion of the analysis")
 
 
-llm = ChatOpenAI(model_name="gpt-4o-mini", temperature=0.3, openai_api_key=openai_api_key)
+# -----------------------------------------------------
+# Set up the model that will be used
+# -----------------------------------------------------
+llm = ChatOpenAI(
+    model_name="gpt-4o-mini", temperature=0.3, openai_api_key=openai_api_key
+)
 
 
 # -----------------------------------------------------
@@ -239,7 +244,6 @@ def load_survey_details(file_path: str = "./survey_details.txt") -> str:
         return ""
 
 
-
 # -----------------------------------------------------
 # Preprocessing Function
 # -----------------------------------------------------
@@ -283,10 +287,9 @@ def create_sentiment_chain() -> RunnableSequence:
     For each statement, provide a sentiment score between -1 (negative) and +1 (positive),
     and a sentiment label (Positive, Neutral, Negative).
 
-    **Important:** Ensure that each result includes the 'statement', 'score', and 'label' fields,
-    even if the input statement is incomplete or unclear.
+    **Important:** Ensure that all statements are analyzed. Do not leave anything out.
 
-    Please return the results in the following format:
+     **Important:** Please return the results in the following format:
     {format_instructions}
 
     Customer Statements:
