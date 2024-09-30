@@ -1,0 +1,12 @@
+langchain
+langchain_core
+langchain_openai
+pydantic
+matplotlib
+python-docx
+python-dotenv
+seaborn
+rapidfuzz
+nltk
+markdown
+beautifulsoup4

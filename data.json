@@ -1,0 +1,36 @@
+{
+  "attributes": [
+    {
+      "primary_attribute": "Staff Interaction",
+      "secondary_attributes": [
+        {
+          "attribute": "Staff Professionalism",
+          "tertiary_attributes": [
+            {
+              "attribute": "Politeness of staff",
+              "statements": [
+                "statement 1",
+                "statement2"
+              ]
+            },
+            {
+              "attribute": "Profesionalizm",
+              "statements": [
+                "statement_3",
+                "statemet 4",
+                "stement 5"
+              ]
+            },
+            {
+              "attribute": "Politeness of staff",
+              "statements": [
+                "statement 10",
+                "ect"
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
