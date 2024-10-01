@@ -85,18 +85,31 @@ def generate_final_report(
 
     # Create DOCX document
     doc = Document()
-    doc.add_heading(f"Customer Feedback Report for {domain}", 0)
+    # Use the title from the BusinessAnalysis object
+    doc.add_heading(business_analysis.title, 0)
 
     # Add Introduction
     doc.add_heading("Introduction", level=1)
     add_markdown_to_docx(business_analysis.introduction, doc)
 
-    # Add Findings
-    doc.add_heading("Findings", level=1)
-
-    # Customer Attribute Breakdown Section
-    doc.add_heading("Customer Attribute Breakdown", level=2)
+    # Add Derived Attributes Introduction
+    doc.add_heading("Introduction to Derived Customer Attributes", level=1)
     add_markdown_to_docx(business_analysis.derived_attributes_introduction, doc)
+
+    # Add Findings
+    doc.add_heading("Analysis", level=1)
+    add_markdown_to_docx(business_analysis.analysis, doc)
+
+    # Add Recommendations Section
+    doc.add_heading("Recommendations", level=1)
+    add_markdown_to_docx(business_analysis.recommendations, doc)
+
+    # Add Conclusion
+    doc.add_heading("Conclusion", level=1)
+    add_markdown_to_docx(business_analysis.conclusions, doc)
+
+    # Add Customer Attribute Breakdown Section
+    doc.add_heading("Customer Attribute Breakdown", level=1)
 
     # Create the customer attribute table
     attribute_table = doc.add_table(rows=1, cols=3)
@@ -136,11 +149,17 @@ def generate_final_report(
                 # Write the tertiary attribute
                 row_cells[2].text = tertiary_attr.attribute
 
+            # Reset the secondary attribute flag after finishing tertiary attributes
+            secondary_attr_written = False
+
+        # Reset the primary attribute flag after finishing secondary attributes
+        primary_attr_written = False
+
     # Add spacing after the table
     doc.add_paragraph()
 
     # Relative Importance Table
-    doc.add_heading("Relative Importance of Customer Attributes", level=2)
+    doc.add_heading("Relative Importance of Customer Attributes", level=1)
     importance_table = doc.add_table(rows=1, cols=2)
     importance_table.style = "Light List Accent 1"
     hdr_cells = importance_table.rows[0].cells
@@ -158,24 +177,12 @@ def generate_final_report(
     # Add Chart
     chart_filename = "relative_importance_chart.png"
     if os.path.exists(chart_filename):
-        doc.add_heading("Relative Importance Chart", level=2)
+        doc.add_heading("Relative Importance Chart", level=1)
         doc.add_picture(chart_filename, width=Inches(6))
     else:
         logger.warning(
             f"Chart file {chart_filename} not found. Skipping chart insertion."
         )
-
-    # Add Business Analysis Section
-    doc.add_heading("Business Analysis", level=1)
-    add_markdown_to_docx(business_analysis.analysis, doc)
-
-    # Add Recommendations Section
-    doc.add_heading("Recommendations", level=1)
-    add_markdown_to_docx(business_analysis.recommendations, doc)
-
-    # Add Conclusion
-    doc.add_heading("Conclusion", level=1)
-    add_markdown_to_docx(business_analysis.conclusions, doc)
 
     # Add Appendix Section: Statements grouped by sentiment
     doc.add_heading("Appendix: Statements by Sentiment", level=1)
@@ -201,16 +208,16 @@ def generate_final_report(
             for tertiary_attr in secondary_attr.tertiary_attributes:
                 for stmt in tertiary_attr.statements:
                     sentiment = stmt.score
-                    if sentiment > 0:
+                    if sentiment >= 0.3:
                         positive_statements.append(
                             f"{stmt.statement} ({sentiment:.2f})"
                         )
-                    elif sentiment == 0:
-                        neutral_statements.append(f"{stmt.statement} ({sentiment:.2f})")
-                    else:
+                    elif sentiment <= -0.3:
                         negative_statements.append(
                             f"{stmt.statement} ({sentiment:.2f})"
                         )
+                    else:
+                        neutral_statements.append(f"{stmt.statement} ({sentiment:.2f})")
 
         # Add a new row for the primary attribute
         row_cells = appendix_table.add_row().cells

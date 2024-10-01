@@ -69,9 +69,10 @@ def main():
         logger.error("No customer statements loaded. Exiting.")
         return
 
-    # Create LLM chains
+    # Create LLM chain for sentiment analysis
     sentiment_chain = create_sentiment_chain()
-    attribute_chain = create_attribute_chain()
+    # Remove the line that creates attribute_chain, as it is now created within process_attribute_derivation
+    # attribute_chain = create_attribute_chain()  # Remove or comment out this line
 
     # Step 1: Run sentiment analysis with batch processing
     logger.info("Performing sentiment analysis with batch processing...")
@@ -97,21 +98,16 @@ def main():
     # Step 2: Run attribute derivation chain with batch processing
     logger.info("Deriving customer attributes with batch processing...")
     try:
-        # Pass the list of sentiment result dictionaries directly
-        all_customer_attributes = process_attribute_derivation(
-            attribute_chain,
+        # Pass the create_attribute_chain function as a callable
+        parsed_customer_attributes = process_attribute_derivation(
+            create_attribute_chain,  # Pass the function, not an instance
             all_sentiment_results,  # Already a list of dicts
             domain,
         )
 
-        if not all_customer_attributes:
+        if not parsed_customer_attributes:
             logger.error("No customer attributes derived. Exiting.")
             return
-
-        # Assign to parsed_customer_attributes
-        parsed_customer_attributes: List[
-            PrimaryAttribute
-        ] = all_customer_attributes  # List of PrimaryAttribute
 
         logger.debug(f"Parsed Customer Attributes: {parsed_customer_attributes}")
 

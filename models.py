@@ -1,5 +1,5 @@
 from typing import List
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, validator
 
 
 class Statement(BaseModel):
@@ -15,6 +15,18 @@ class SentimentResult(BaseModel):
     statement: str = Field(description="The original customer statement")
     score: float = Field(description="Sentiment score between -1 and 1")
     label: str = Field(description="Sentiment label: Positive, Neutral, or Negative")
+
+    @validator("label", always=True, pre=True)
+    def set_label(cls, v, values):
+        score = values.get("score")
+        if score is None:
+            raise ValueError("Score must be provided to set label.")
+        if score <= -0.3:
+            return "Negative"
+        elif score >= 0.3:
+            return "Positive"
+        else:
+            return "Neutral"
 
 
 class SentimentResults(BaseModel):
@@ -61,14 +73,15 @@ class CustomerAttributes(BaseModel):
 class BusinessAnalysis(BaseModel):
     """Model representing the business analysis based on previous results"""
 
+    title: str = Field(description="The title of the report")
     introduction: str = Field(
         description="The introduction of the narrative to the analysis"
-    )
-    analysis: str = Field(description="The main body of the narrative of the analysis")
-    recommendations: str = Field(
-        description="Summary and recommendations for the operations management team"
     )
     derived_attributes_introduction: str = Field(
         description="The introduction of the process of deriving customer attributes from survey statements"
     )
-    conclusions: str = Field(description="Summary and conclusion of the analysis")
+    analysis: str = Field(description="The main body of the narrative of the analysis")
+    recommendations: str = Field(
+        description="Summary and recommendations for the operations management team with clear actionable todo-items"
+    )
+    conclusions: str = Field(description="Summary and conclusion of the analysis.")

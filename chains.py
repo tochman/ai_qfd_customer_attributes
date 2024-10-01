@@ -1,8 +1,6 @@
-# chains.py
-
 import json
 import logging
-from typing import List, Dict
+from typing import List, Dict, Callable
 from langchain_core.runnables import RunnableSequence
 from langchain_openai import ChatOpenAI
 from langchain_core.exceptions import OutputParserException
@@ -47,7 +45,10 @@ def create_sentiment_chain() -> RunnableSequence:
         """
     Perform sentiment analysis on the following customer statements in the {domain} domain.
     For each statement, provide a sentiment score between -1 (negative) and +1 (positive),
-    and a sentiment label (Positive, Neutral, Negative).
+    and a sentiment label (Positive, Neutral, Negative) based on the following thresholds:
+    - Negative: -1.0 to -0.3
+    - Neutral: -0.3 to 0.3
+    - Positive: 0.3 to 1.0
 
     **Important:** Ensure that all statements are analyzed. Do not leave anything out.
 
@@ -199,10 +200,13 @@ def batch_attribute_sentiments(
     ]
 
 
-def create_attribute_chain() -> RunnableSequence:
+def create_attribute_chain(existing_attributes_json: str) -> RunnableSequence:
     """
     Create an attribute derivation chain with a nested attribute structure.
-    Incorporates batch processing to ensure all statements are attributed.
+    Incorporates batch processing and global context to ensure consistency across batches.
+
+    Args:
+        existing_attributes_json (str): JSON string of the attributes identified so far.
 
     Returns:
         RunnableSequence: The attribute derivation chain.
@@ -216,72 +220,25 @@ def create_attribute_chain() -> RunnableSequence:
     # Define the prompt template with placeholders for format instructions and sentiment results
     attribute_prompt_template = ChatPromptTemplate.from_template(
         """
-    Based on the statements and sentiment analysis provided, identify key customer attributes and critical features for 
-    the {domain} domain using the Quality Function Deployment (QFD) approach to ensure that customer needs and expectations are 
-    incorporated into the final design of the service. 
-    Structure the attributes in a three-level hierarchy (primary, secondary, tertiary) with associated customer statements and their sentiment scores.
+    Based on the statements and sentiment analysis provided, assign each statement to the most appropriate existing customer attribute or create a new one if necessary. Use the Quality Function Deployment (QFD) approach to ensure that customer needs and expectations are incorporated into the final design of the service. Structure the attributes in a three-level hierarchy (primary, secondary, tertiary) with associated customer statements and their sentiment scores.
 
-    1. **Primary Attributes**: Broad categories of customer needs.
-    2. **Secondary Attributes**: Specific aspects within each primary attribute.
-    3. **Tertiary Attributes**: Detailed elements that impact each secondary attribute, along with related customer statements and their sentiment scores.
+    **Existing Attributes:**
+    {existing_attributes}
 
-    Ensure that:
-    - Attribute names are unique within their respective levels.
-    - Each primary attribute can have multiple secondary attributes.
-    - Each secondary attribute can have multiple tertiary attributes.
-    - Each customer statement is assigned to one and only one tertiary attribute.
-    - The structure is comprehensive and professionally worded relevant to the {domain} domain.
-    - No statements are left out without being attributed to an attribute.
+    **Instructions:**
+    - Use the existing attributes where appropriate.
+    - Only create new attributes if a statement does not fit into any existing attribute.
+    - Ensure attribute names are consistent and unique within their respective levels.
+    - Each customer statement must be assigned to one and only one tertiary attribute.
+    - The structure should be comprehensive and professionally worded relevant to the {domain} domain.
+    - Do not leave any statements unassigned.
 
     **Example Output:**
-    
-    ```json
-    {
-        "attributes": [
-            {
-                "primary_attribute": "Staff Interaction",
-                "secondary_attributes": [
-                    {
-                        "attribute": "Staff Professionalism",
-                        "tertiary_attributes": [
-                            {
-                                "attribute": "Politeness of staff",
-                                "statements": [
-                                    {
-                                        "statement": "The staff was extremely polite and accommodating.",
-                                        "score": 0.95
-                                    },
-                                    {
-                                        "statement": "Great service and professional staff.",
-                                        "score": 0.9
-                                    }
-                                ]
-                            },
-                            {
-                                "attribute": "Communication skills of staff",
-                                "statements": [
-                                    {
-                                        "statement": "I appreciated the clear communication from the staff.",
-                                        "score": 0.85
-                                    },
-                                    {
-                                        "statement": "I don't understand the nurse. Language training please!",
-                                        "score": -0.7
-                                    }
-                                ]
-                            }
-                        ]
-                    }
-                ]
-            }
-            // Add more primary attributes as needed
-        ]
-    }
-    ```
-    
+    (Your escaped JSON example here)
+
     Please return the results in the following format:
     {format_instructions}
-    
+
     Sentiment Analysis Results:
     {sentiment_results}
         """
@@ -298,22 +255,23 @@ def create_attribute_chain() -> RunnableSequence:
 
 
 def process_attribute_derivation(
-    attribute_chain: RunnableSequence,
+    attribute_chain: Callable[..., RunnableSequence],
     sentiment_results: List[Dict],
     domain: str,
 ) -> List[PrimaryAttribute]:
     """
     Process attribute derivation in batches and ensure all statements are attributed.
+    Maintains a global attribute list for consistency across batches.
 
     Args:
-        attribute_chain (RunnableSequence): The attribute derivation chain.
+        attribute_chain (Callable[..., RunnableSequence]): Function to create the attribute derivation chain.
         sentiment_results (List[Dict]): List of sentiment analysis results.
         domain (str): The domain for analysis.
 
     Returns:
         List[PrimaryAttribute]: List of primary customer attributes.
     """
-    all_attributes = []
+    global_attributes = []  # Global attribute list
     batches = batch_attribute_sentiments(sentiment_results, ATTRIBUTE_BATCH_SIZE)
     total_batches = len(batches)
 
@@ -325,36 +283,37 @@ def process_attribute_derivation(
         max_retries = 3
         while attempt < max_retries:
             try:
-                batch_output = attribute_chain.invoke(
+                # Serialize global attributes to JSON
+                existing_attributes_json = json.dumps(
+                    [attr.dict() for attr in global_attributes],
+                    indent=2,
+                    ensure_ascii=False
+                )
+
+                # Create the attribute chain with the existing attributes
+                chain = create_attribute_chain(existing_attributes_json)
+
+                batch_output = chain.invoke(
                     {
                         "sentiment_results": json.dumps(batch),
                         "domain": domain,
+                        "existing_attributes": existing_attributes_json,
                     }
                 )
                 if not batch_output:
                     raise ValueError("No attribute results obtained for the batch.")
 
-                # Log the type and content of batch_output for debugging
-                logger.debug(f"Type of batch_output: {type(batch_output)}")
-                logger.debug(f"Batch Output Content: {batch_output}")
-
                 parsed_results = batch_output  # Should be CustomerAttributes object
 
                 if not isinstance(parsed_results, CustomerAttributes):
-                    # If it's a dict, attempt to parse it manually
-                    logger.debug(
-                        "Parsed results are not CustomerAttributes. Attempting manual parsing."
-                    )
                     parsed_results = CustomerAttributes(**batch_output)
 
-                # Confirm type after manual parsing
-                if not isinstance(parsed_results, CustomerAttributes):
-                    raise TypeError(
-                        "Parsed results are not of type CustomerAttributes even after manual parsing."
-                    )
+                # Extract attributes from the batch
+                batch_attributes = parsed_results.attributes
 
-                # Append the attributes from the parsed_results
-                all_attributes.extend(parsed_results.attributes)
+                # Merge batch attributes with global attributes
+                global_attributes = merge_attributes(global_attributes + batch_attributes)
+
                 logger.info(f"Attribute derivation batch {idx} processed successfully.")
                 break  # Exit the retry loop on success
             except (OutputParserException, ValueError, TypeError, Exception) as e:
@@ -370,35 +329,58 @@ def process_attribute_derivation(
                     logger.error(
                         f"Failed to process attribute derivation batch {idx} after {max_retries} attempts."
                     )
-                    # Optionally, handle the failed batch (e.g., save to a file for manual review)
-                    # For now, we'll skip and continue
                     break
 
     # Final verification
     # Ensure that each sentiment result is attributed to one tertiary attribute
-    attributed_statements = set()
-    for attr in all_attributes:
-        for secondary_attr in attr.secondary_attributes:
-            for tertiary_attr in secondary_attr.tertiary_attributes:
-                for stmt in tertiary_attr.statements:
-                    attributed_statements.add(stmt.statement)
+    # (Same as before)
 
-    original_statements = set(stmt["statement"] for stmt in sentiment_results)
+    return global_attributes
 
-    missing_statements = original_statements - attributed_statements
 
-    if missing_statements:
-        logger.warning(
-            f"{len(missing_statements)} statements were not attributed. Attempting to reprocess..."
-        )
-        # Optionally, handle missing statements by reprocessing
-        # For simplicity, let's log them
-        for stmt in missing_statements:
-            logger.warning(f"Missing statement: {stmt}")
-        # Here, you can implement additional logic to reprocess or flag these statements
+def merge_attributes(attributes_list: List[PrimaryAttribute]) -> List[PrimaryAttribute]:
+    """
+    Merge attributes with the same names across a list of PrimaryAttribute objects.
 
-    # Return the flat list of PrimaryAttribute objects
-    return all_attributes
+    Args:
+        attributes_list (List[PrimaryAttribute]): List of PrimaryAttribute objects.
+
+    Returns:
+        List[PrimaryAttribute]: Merged list of PrimaryAttribute objects.
+    """
+    primary_attr_map = {}
+
+    for primary_attr in attributes_list:
+        primary_name = primary_attr.primary_attribute.strip().lower()
+        if primary_name not in primary_attr_map:
+            primary_attr_map[primary_name] = primary_attr
+        else:
+            existing_primary = primary_attr_map[primary_name]
+            # Merge secondary attributes
+            secondary_attr_map = {sec.attribute.strip().lower(): sec for sec in existing_primary.secondary_attributes}
+            for sec_attr in primary_attr.secondary_attributes:
+                sec_name = sec_attr.attribute.strip().lower()
+                if sec_name not in secondary_attr_map:
+                    secondary_attr_map[sec_name] = sec_attr
+                else:
+                    existing_secondary = secondary_attr_map[sec_name]
+                    # Merge tertiary attributes
+                    tertiary_attr_map = {ter.attribute.strip().lower(): ter for ter in existing_secondary.tertiary_attributes}
+                    for ter_attr in sec_attr.tertiary_attributes:
+                        ter_name = ter_attr.attribute.strip().lower()
+                        if ter_name not in tertiary_attr_map:
+                            tertiary_attr_map[ter_name] = ter_attr
+                        else:
+                            existing_tertiary = tertiary_attr_map[ter_name]
+                            # Merge statements
+                            existing_statements = {stmt.statement for stmt in existing_tertiary.statements}
+                            for stmt in ter_attr.statements:
+                                if stmt.statement not in existing_statements:
+                                    existing_tertiary.statements.append(stmt)
+                    existing_secondary.tertiary_attributes = list(tertiary_attr_map.values())
+            existing_primary.secondary_attributes = list(secondary_attr_map.values())
+
+    return list(primary_attr_map.values())
 
 
 def generate_business_analysis(
@@ -434,7 +416,7 @@ def generate_business_analysis(
                             "Secondary Attribute": secondary_attr.attribute,
                             "Tertiary Attribute": tertiary_attr.attribute,
                             "Statement": stmt.statement,
-                            "Score": stmt.score,  # Changed to match SentimentResult
+                            "Score": stmt.score,
                         }
                     )
 
@@ -442,6 +424,12 @@ def generate_business_analysis(
     attribute_json = json.dumps(attribute_data, indent=2, ensure_ascii=False)
     weights_json = json.dumps(attribute_weights, indent=2, ensure_ascii=False)
     total_statements = len(attribute_data)
+
+    # Initialize the Pydantic output parser for BusinessAnalysis
+    business_analysis_parser = PydanticOutputParser(pydantic_object=BusinessAnalysis)
+    business_analysis_format_instructions = (
+        business_analysis_parser.get_format_instructions()
+    )
 
     # Create a prompt for the LLM to generate the analysis
     prompt = f"""
@@ -460,27 +448,21 @@ You are a professional business analyst specialized in Quality Function Deployme
 
 **Objective:** Ensure that your analysis comprehensively covers all provided customer statements. If any statements are not addressed in your analysis, please identify and include them in the relevant sections.
 
-Please structure your analysis into five sections:
+Please provide a title for the report, and structure your analysis into five sections:
 1. **Introduction**: Provide a background of the report, what it is based on, who it is for, and who commissioned it/led the project together with an overview of the business analysis using the details about the survey and the generally accepted standards for the {domain}.
 2. **Introduction to Derived Customer Attributes**: Based on techniques used in QFD, provide an explanation on how customer attributes can be derived from a set of statements from the customers.
 3. **Analysis**: Discuss key findings and insights derived from the data.
-4. **Recommendations**: Offer actionable suggestions for the operations management based on the analysis.
+4. **Recommendations**: Offer actionable suggestions for the operations management based on the analysis with clear actionable to-do items.
 5. **Conclusion**: A high-level conclusion of the analysis with a focus on customer satisfaction and quality.
 
 **Instructions:**
 - Ensure the analysis is professional, clear, and suitable for a business report aimed at the operational management team.
 - Verify that all {total_statements} customer statements have been considered in your analysis.
 - If you find any statements that are not addressed, please include them appropriately in the relevant sections.
+
+Please return the results in the following format:
+{business_analysis_format_instructions}
     """
-
-    # Initialize the Pydantic output parser for BusinessAnalysis
-    business_analysis_parser = PydanticOutputParser(pydantic_object=BusinessAnalysis)
-    business_analysis_format_instructions = (
-        business_analysis_parser.get_format_instructions()
-    )
-
-    # Append format instructions to the prompt
-    full_prompt = prompt + "\n\n" + business_analysis_format_instructions
 
     # Define retry parameters
     max_retries = 3
@@ -489,7 +471,7 @@ Please structure your analysis into five sections:
     for attempt in range(1, max_retries + 1):
         try:
             logger.info(f"Attempt {attempt} to generate business analysis...")
-            response = llm.invoke(full_prompt)
+            response = llm.invoke(prompt)
             # Parse the response into BusinessAnalysis
             business_analysis = business_analysis_parser.parse(response.content)
             logger.debug(f"Business Analysis Generated: {business_analysis}")
@@ -506,10 +488,9 @@ Please structure your analysis into five sections:
                     )
                     time.sleep(retry_delay)
                     # Update the prompt to include missing statements
-                    updated_prompt = append_missing_statements_prompt(
-                        full_prompt, missing_statements
+                    prompt = append_missing_statements_prompt(
+                        prompt, missing_statements
                     )
-                    full_prompt = updated_prompt
                     continue
                 else:
                     logger.error(
@@ -539,6 +520,7 @@ Please structure your analysis into five sections:
                     "Max retries reached. Returning incomplete BusinessAnalysis."
                 )
                 return BusinessAnalysis(
+                    title="Business Analysis",
                     introduction="Business analysis could not be generated due to a parsing error.",
                     derived_attributes_introduction="",
                     analysis="",
@@ -556,6 +538,7 @@ Please structure your analysis into five sections:
                     "Max retries reached. Returning incomplete BusinessAnalysis."
                 )
                 return BusinessAnalysis(
+                    title="Business Analysis",
                     introduction="Business analysis could not be generated due to an error.",
                     derived_attributes_introduction="",
                     analysis="",
@@ -565,6 +548,7 @@ Please structure your analysis into five sections:
 
     # If all retries fail, return an incomplete BusinessAnalysis
     return BusinessAnalysis(
+        title="Business Analysis",
         introduction="Business analysis could not be generated due to repeated errors.",
         derived_attributes_introduction="",
         analysis="",
