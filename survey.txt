@@ -1,33 +1,32 @@
-Length of time until appointment was okay.
-Number of rings until the call is answered.
-Long time on hold.
-Staff was great! Love them.
-I could not understand my doctor. His English was bad.
-The waiting room was too crowded.
-I was passed from person to person.
-I was asked a few needless questions.
-Use of automated phone system.
-Waiting time in office too long.
-Responsiveness of personnel too slow.
-I got an appointment within a week of my call.
-I could not reach the nurse over the phone.
-I had my choice of days.
-I had my choice of times.
-I spent little time on the phone.
-I was asked if this was an emergency.
-I was not put on hold.
-I was in the doctor’s office on schedule.
-My questions were answered accurately and timely.
+Length of time until appointment was okay
+Number of rings until the call is answered
+Long time on hold
+Staff was great! Love them
+I could not understand my doctor His English was bad
+The waiting room was too crowded
+I was passed from person to person
+I was asked a few needless questions
+Use of automated phone system
+Waiting time in office too long
+Responsiveness of personnel too slow
+I got an appointment within a week of my call
+I could not reach the nurse over the phone
+I had my choice of days
+I had my choice of times
+I spent little time on the phone
+I was asked if this was an emergency
+I was not put on hold
+I was in the doctor’s office on schedule
+My questions were answered accurately and timely
 The waiting room was way too crowded
 I was scared and nobody comforted me
 I wanted to see my regular doctor
 I like that I can meet the same doctor again
 The nurses are polite and professional,I feel safe here
-The waiting room is dirty and crowded. I'm scared to catch a disease
-I love the doctor, he is so handsome.
-I love the fact that we can book online.
-My kids love the doctor. We feel great with this clinic.
-
+The waiting room is dirty and crowded I'm scared to catch a disease
+I love the doctor, he is so handsome
+I love the fact that we can book online
+My kids love the doctor We feel great with this clinic
 The nurse was kind and made me feel at ease
 The appointment scheduling process was simple and quick
 The wait time in the clinic was way too long
@@ -100,7 +99,7 @@ The doctor was gentle and thorough
 I was not impressed with the hygiene standards
 The front desk helped me understand my insurance coverage
 I was asked to come in earlier and still had to wait
-My kids love the doctor. We feel great with this clinic
+My kids love the doctor We feel great with this clinic
 The parking was a hassle
 I was called in at my scheduled time
 The doctor’s instructions were clear and concise
