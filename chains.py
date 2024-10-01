@@ -524,7 +524,6 @@ Please structure your analysis into five sections:
 
         except OutputParserException as e:
             logger.error(f"Failed to parse business analysis: {e}")
-            # It's possible that 'response' might not be defined if the exception occurs before assignment
             try:
                 logger.debug(f"Assistant's response content: {response.content}")
             except NameError:

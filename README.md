@@ -9,8 +9,8 @@ This project analyzes customer feedback to derive key attributes, perform sentim
 1. **Clone the Repository:**
    
    ```bash
-   git clone https://github.com/yourusername/customer_feedback_analysis.git
-   cd customer_feedback_analysis
+   git clone https://github.com/tochman/ai_qfd_customer_attributes
+   cd ai_qfd_customer_attributes
    ```
 
 2. **Create a Virtual Environment:**
@@ -50,17 +50,16 @@ python main.py --domain "Healthcare Services" --input_file "./survey.txt" --log_
 ```
 
 ### Project Structure
-* main.py: Entry point of the application.
-* config.py: Configuration settings and logging.
-* models.py: Pydantic models for data validation.
-* data_loading.py: Functions to load data from files.
-* chains.py: LangChain chain configurations.
-* analysis.py: Data analysis functions.
-* visualization.py: Visualization functions.
-* report.py: Report generation functions.
-* utils.py: Utility functions.
-* requirements.txt: Python dependencies.
-* .env: Environment variables.
-* survey.txt: Customer statements.
-* survey_details.txt: Survey details.
-* README.md: Project overview and instructions.
+* `main.py`: Entry point of the application.
+* `config.py`: Configuration settings and logging.
+* `models.py`: Pydantic models for data validation.
+* `data_loading.py`: Functions to load data from files.
+* `chains.py`: LangChain chain configurations.
+* `analysis.py`: Data analysis functions.
+* `visualization.py`: Visualization functions.
+* `report.py`: Report generation functions.
+* `utils.py`: Utility functions.
+* `requirements.txt`: Python dependencies.
+* `.env`: Environment variables.
+* `survey.txt`: Customer statements.
+* `survey_details.txt`: Survey details.
