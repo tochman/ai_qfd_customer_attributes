@@ -8,6 +8,12 @@ class Statement(BaseModel):
     statement: str = Field(description="The original customer statement")
     score: float = Field(description="Sentiment score between -1 and 1")
 
+class RelevanceResult(BaseModel):
+    statement: str
+    label: str  # "Relevant" or "Irrelevant"
+
+class RelevanceResults(BaseModel):
+    results: List[RelevanceResult]
 
 class SentimentResult(BaseModel):
     """Model representing the sentiment analysis result for a statement."""

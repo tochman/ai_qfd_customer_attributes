@@ -1,0 +1,8 @@
+Detaljer
+Beställare: Exempel AB
+Plats: Stockholm 
+
+Antal deltagare i undersökningen: 15, varav 10 tjänstemän, 5 lagerarbetare
+Datum: 2024-09-155
+
+Projektledare: Thomas Ochman

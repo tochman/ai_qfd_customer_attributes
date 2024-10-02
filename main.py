@@ -3,6 +3,9 @@ import argparse
 from config import configure_logging
 from data_loading import load_customer_statements, load_survey_details
 from chains import (
+    create_relevance_chain,
+    process_relevance_classification,
+    filter_relevant_statements,
     create_sentiment_chain,
     create_attribute_chain,
     process_sentiment_analysis,
@@ -16,9 +19,6 @@ from langchain_core.exceptions import OutputParserException
 
 
 def parse_arguments():
-    """
-    Parse command-line arguments.
-    """
     parser = argparse.ArgumentParser(
         description="Customer Feedback Analysis with Nested Attributes"
     )
@@ -51,29 +51,43 @@ def parse_arguments():
 
 
 def main():
-    # Parse command-line arguments
     args = parse_arguments()
     domain = args.domain
     input_file = args.input_file
-    survey_details_file = args.survey_details_file  # Get the survey details file path
+    survey_details_file = args.survey_details_file
     log_level = args.log_level.upper()
 
-    # Configure logging
     logger = configure_logging(log_level)
 
     logger.info("Starting the customer attribute analysis pipeline...")
 
-    # Load customer statements
     customer_statements = load_customer_statements(input_file)
 
     if not customer_statements:
         logger.error("No customer statements loaded. Exiting.")
         return
 
+    # Relevance Classification
+    logger.info("Classifying statements based on relevance...")
+    relevance_chain = create_relevance_chain()
+    try:
+        relevance_results = process_relevance_classification(
+            relevance_chain, customer_statements, domain
+        )
+        customer_statements = filter_relevant_statements(relevance_results)
+        logger.info(f"Total relevant statements: {len(customer_statements)}")
+    except Exception as e:
+        logger.error(f"An error occurred during relevance classification: {e}")
+        return
+
+    if not customer_statements:
+        logger.error("No relevant customer statements found. Exiting.")
+        return
+
     # Create LLM chain for sentiment analysis
     sentiment_chain = create_sentiment_chain()
 
-    # Step 1: Run sentiment analysis with batch processing
+    # Run sentiment analysis with batch processing
     logger.info("Performing sentiment analysis with batch processing...")
     try:
         all_sentiment_results = process_sentiment_analysis(
@@ -84,7 +98,6 @@ def main():
         logger.error(f"An unexpected error occurred during sentiment analysis: {e}")
         return
 
-    # Count neutral statements
     neutral_count = sum(
         1 for result in all_sentiment_results if result["label"] == "Neutral"
     )
@@ -94,13 +107,12 @@ def main():
             "No neutral statements were detected. Review sentiment analysis parameters."
         )
 
-    # Step 2: Run attribute derivation chain with batch processing
+    # Run attribute derivation chain with batch processing
     logger.info("Deriving customer attributes with batch processing...")
     try:
-        # Pass the create_attribute_chain function as a callable
         parsed_customer_attributes = process_attribute_derivation(
-            create_attribute_chain,  # Pass the function, not an instance
-            all_sentiment_results,  # Already a list of dicts
+            create_attribute_chain,
+            all_sentiment_results,
             domain,
         )
 
@@ -120,7 +132,7 @@ def main():
         logger.error(f"An unexpected error occurred during attribute derivation: {e}")
         return
 
-    # Step 3: Calculate relative importance
+    # Calculate relative importance
     attribute_weights = calculate_relative_importance(parsed_customer_attributes)
     logger.debug(f"Attribute Weights before Conversion: {attribute_weights}")
 
@@ -128,16 +140,16 @@ def main():
         logger.error("No attribute weights calculated. Exiting.")
         return
 
-    # Step 4: Generate visualizations
+    # Generate visualizations
     generate_visualizations(attribute_weights)
 
-    # Step 5: Generate business analysis
-    survey_details = load_survey_details(survey_details_file)  # Use the argument here
+    # Generate business analysis
+    survey_details = load_survey_details(survey_details_file)
     business_analysis = generate_business_analysis(
         domain, parsed_customer_attributes, attribute_weights, survey_details
     )
 
-    # Step 6: Generate the comprehensive report
+    # Generate the comprehensive report
     generate_final_report(
         domain, parsed_customer_attributes, attribute_weights, business_analysis
     )

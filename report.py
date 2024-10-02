@@ -3,12 +3,18 @@ from docx import Document
 from docx.shared import Inches
 import logging
 import os
+import re
 import markdown
 from bs4 import BeautifulSoup
 from typing import List, Dict
 
 logger = logging.getLogger()
 
+def to_snake_case(text: str) -> str:
+    """
+    Convert a given string to snake_case.
+    """
+    return re.sub(r'\W+', '_', text.lower())
 
 def add_markdown_to_docx(markdown_text: str, doc: Document):
     """
@@ -121,11 +127,9 @@ def generate_final_report(
 
     # Iterate over the customer attributes and fill the table
     for attr in customer_attributes:
-        primary_attr_written = (
-            False  # Flag to track if primary attribute has been written
-        )
+        primary_attr_written = False
         for secondary_attr in attr.secondary_attributes:
-            secondary_attr_written = False  # Flag for secondary attribute
+            secondary_attr_written = False
             for tertiary_attr in secondary_attr.tertiary_attributes:
                 # Add a new row to the table
                 row_cells = attribute_table.add_row().cells
@@ -135,22 +139,20 @@ def generate_final_report(
                     row_cells[0].text = attr.primary_attribute
                     primary_attr_written = True
                 else:
-                    row_cells[0].text = ""  # Leave empty for subsequent rows
+                    row_cells[0].text = ""
 
                 # Only write the secondary attribute if it hasn't been written yet
                 if not secondary_attr_written:
                     row_cells[1].text = secondary_attr.attribute
                     secondary_attr_written = True
                 else:
-                    row_cells[1].text = ""  # Leave empty for subsequent rows
+                    row_cells[1].text = ""
 
                 # Write the tertiary attribute
                 row_cells[2].text = tertiary_attr.attribute
 
-            # Reset the secondary attribute flag after finishing tertiary attributes
             secondary_attr_written = False
 
-        # Reset the primary attribute flag after finishing secondary attributes
         primary_attr_written = False
 
     # Add spacing after the table
@@ -228,8 +230,8 @@ def generate_final_report(
             "\n".join(negative_statements) if negative_statements else "-"
         )
 
-    # Save DOCX file
-    report_filename = "final_customer_feedback_report.docx"
+    # Create the filename based on the title
+    report_filename = f"{to_snake_case(business_analysis.title)}.docx"
     try:
         doc.save(report_filename)
         logger.info(f"Final report saved to {report_filename}")
