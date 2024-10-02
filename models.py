@@ -21,9 +21,9 @@ class SentimentResult(BaseModel):
         score = values.get("score")
         if score is None:
             raise ValueError("Score must be provided to set label.")
-        if score <= -0.3:
+        if score <= -0.1:
             return "Negative"
-        elif score >= 0.3:
+        elif score >= 0.1:
             return "Positive"
         else:
             return "Neutral"

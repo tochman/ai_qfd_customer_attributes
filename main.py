@@ -1,8 +1,4 @@
-# main.py
-
-import logging
 import argparse
-import json
 
 from config import configure_logging
 from data_loading import load_customer_statements, load_survey_details
@@ -18,11 +14,6 @@ from visualization import generate_visualizations
 from report import generate_final_report, save_attributes_json
 from langchain_core.exceptions import OutputParserException
 
-from models import (
-    BusinessAnalysis,
-    PrimaryAttribute,
-)
-
 
 def parse_arguments():
     """
@@ -32,13 +23,22 @@ def parse_arguments():
         description="Customer Feedback Analysis with Nested Attributes"
     )
     parser.add_argument(
-        "--domain", type=str, default="Healthcare Services", help="Domain for analysis"
+        "--domain",
+        type=str,
+        default="Healthcare Services",
+        help="Domain for analysis",
     )
     parser.add_argument(
         "--input_file",
         type=str,
         default="./survey.txt",
         help="Path to customer statements file",
+    )
+    parser.add_argument(
+        "--survey_details_file",
+        type=str,
+        default="./survey_details.txt",
+        help="Path to the survey details file",
     )
     parser.add_argument(
         "--log_level",
@@ -55,6 +55,7 @@ def main():
     args = parse_arguments()
     domain = args.domain
     input_file = args.input_file
+    survey_details_file = args.survey_details_file  # Get the survey details file path
     log_level = args.log_level.upper()
 
     # Configure logging
@@ -71,8 +72,6 @@ def main():
 
     # Create LLM chain for sentiment analysis
     sentiment_chain = create_sentiment_chain()
-    # Remove the line that creates attribute_chain, as it is now created within process_attribute_derivation
-    # attribute_chain = create_attribute_chain()  # Remove or comment out this line
 
     # Step 1: Run sentiment analysis with batch processing
     logger.info("Performing sentiment analysis with batch processing...")
@@ -133,7 +132,7 @@ def main():
     generate_visualizations(attribute_weights)
 
     # Step 5: Generate business analysis
-    survey_details = load_survey_details("./survey_details.txt")
+    survey_details = load_survey_details(survey_details_file)  # Use the argument here
     business_analysis = generate_business_analysis(
         domain, parsed_customer_attributes, attribute_weights, survey_details
     )

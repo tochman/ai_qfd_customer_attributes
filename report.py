@@ -1,5 +1,3 @@
-# report.py
-
 from models import PrimaryAttribute, BusinessAnalysis
 from docx import Document
 from docx.shared import Inches

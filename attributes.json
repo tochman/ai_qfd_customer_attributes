@@ -15,23 +15,11 @@
                                 },
                                 {
                                     "statement": "The online booking system is so convenient",
-                                    "score": 0.9
-                                },
-                                {
-                                    "statement": "The appointment scheduling process was simple and quick",
-                                    "score": 0.8
-                                },
-                                {
-                                    "statement": "I got an appointment exactly when I wanted it",
                                     "score": 0.8
                                 },
                                 {
                                     "statement": "The clinic's website was easy to use",
-                                    "score": 0.8
-                                },
-                                {
-                                    "statement": "The website was easy to navigate and book an appointment",
-                                    "score": 0.8
+                                    "score": 0.9
                                 }
                             ]
                         },
@@ -40,28 +28,36 @@
                             "statements": [
                                 {
                                     "statement": "I got an appointment within a week of my call",
-                                    "score": 0.5
+                                    "score": 0.6
                                 },
                                 {
                                     "statement": "I had my choice of days",
                                     "score": 0.5
                                 },
                                 {
-                                    "statement": "I had my choice of times",
-                                    "score": 0.5
+                                    "statement": "I got an appointment exactly when I wanted it",
+                                    "score": 0.9
                                 },
                                 {
-                                    "statement": "I was called in at my scheduled time",
-                                    "score": 0.5
+                                    "statement": "I was able to book a follow-up appointment easily",
+                                    "score": 0.8
                                 }
                             ]
                         },
                         {
-                            "attribute": "Clarity of Process",
+                            "attribute": "Simplicity of Process",
                             "statements": [
+                                {
+                                    "statement": "The appointment scheduling process was simple and quick",
+                                    "score": 0.8
+                                },
                                 {
                                     "statement": "The appointment scheduling was straightforward",
                                     "score": 0.7
+                                },
+                                {
+                                    "statement": "I found the appointment scheduling process to be very easy",
+                                    "score": 0.9
                                 }
                             ]
                         }
@@ -71,7 +67,7 @@
                     "attribute": "Waiting Time",
                     "tertiary_attributes": [
                         {
-                            "attribute": "Wait Time on Phone",
+                            "attribute": "Time on Hold",
                             "statements": [
                                 {
                                     "statement": "I had to wait on hold for 15 minutes before speaking to someone",
@@ -84,26 +80,30 @@
                             ]
                         },
                         {
-                            "attribute": "Wait Time in Office",
+                            "attribute": "In-Office Waiting Time",
                             "statements": [
                                 {
                                     "statement": "Waiting time in office too long",
-                                    "score": -0.7
+                                    "score": -0.6
                                 },
                                 {
                                     "statement": "The wait time in the clinic was way too long",
                                     "score": -0.7
                                 },
                                 {
-                                    "statement": "The wait time was longer than expected, but the staff was courteous",
-                                    "score": 0.2
+                                    "statement": "The clinic was quite busy, and it took some time to be seen",
+                                    "score": -0.1
                                 },
                                 {
                                     "statement": "I appreciated that I didn’t have to wait long to be seen",
-                                    "score": 0.7
+                                    "score": 0.6
                                 },
                                 {
-                                    "statement": "I was asked to come in earlier and still had to wait",
+                                    "statement": "The doctor was running behind schedule",
+                                    "score": -0.4
+                                },
+                                {
+                                    "statement": "I didn’t receive any updates about the delay",
                                     "score": -0.5
                                 }
                             ]
@@ -116,36 +116,64 @@
             "primary_attribute": "Staff Interaction",
             "secondary_attributes": [
                 {
-                    "attribute": "Communication Skills",
+                    "attribute": "Professionalism",
                     "tertiary_attributes": [
                         {
-                            "attribute": "Clarity of Information",
+                            "attribute": "Staff Attitude",
                             "statements": [
                                 {
-                                    "statement": "The doctor explained everything very clearly and patiently",
-                                    "score": 0.9
+                                    "statement": "Staff was great! Love them",
+                                    "score": 1.0
                                 },
                                 {
-                                    "statement": "My questions were answered accurately and timely",
+                                    "statement": "The clinic staff were efficient and professional",
                                     "score": 0.8
                                 },
                                 {
-                                    "statement": "I wish the doctor had spent more time explaining the diagnosis",
-                                    "score": -0.3
+                                    "statement": "The nurse was kind and made me feel at ease",
+                                    "score": 0.9
                                 },
                                 {
-                                    "statement": "The nurse spoke too quickly for me to understand everything",
-                                    "score": -0.3
+                                    "statement": "The receptionist was friendly but seemed distracted",
+                                    "score": 0.2
                                 },
                                 {
-                                    "statement": "The doctor’s instructions were clear and concise",
-                                    "score": 0.7
+                                    "statement": "The receptionist was polite but not very helpful",
+                                    "score": -0.1
+                                },
+                                {
+                                    "statement": "The receptionist provided me with the necessary information",
+                                    "score": 0.5
+                                },
+                                {
+                                    "statement": "The receptionist was efficient but not particularly friendly",
+                                    "score": 0.1
+                                },
+                                {
+                                    "statement": "The nurse was very professional and courteous",
+                                    "score": 0.8
+                                },
+                                {
+                                    "statement": "The receptionist seemed overworked and hurried",
+                                    "score": -0.4
+                                },
+                                {
+                                    "statement": "The billing clerk was rude",
+                                    "score": -0.8
                                 }
                             ]
                         },
                         {
-                            "attribute": "Language Proficiency",
+                            "attribute": "Communication Skills",
                             "statements": [
+                                {
+                                    "statement": "The doctor explained everything very clearly and patiently",
+                                    "score": 0.8
+                                },
+                                {
+                                    "statement": "My questions were answered accurately and timely",
+                                    "score": 0.7
+                                },
                                 {
                                     "statement": "I could not understand my doctor His English was bad",
                                     "score": -0.7
@@ -153,6 +181,14 @@
                                 {
                                     "statement": "I could not understand what the receptionist was saying",
                                     "score": -0.5
+                                },
+                                {
+                                    "statement": "The nurse spoke too quickly for me to understand everything",
+                                    "score": -0.3
+                                },
+                                {
+                                    "statement": "The doctor didn’t make eye contact during the consultation",
+                                    "score": -0.4
                                 },
                                 {
                                     "statement": "I had trouble understanding some medical terms used",
@@ -163,54 +199,29 @@
                     ]
                 },
                 {
-                    "attribute": "Professionalism",
+                    "attribute": "Support and Comfort",
                     "tertiary_attributes": [
                         {
-                            "attribute": "Staff Attitude",
+                            "attribute": "Emotional Support",
                             "statements": [
                                 {
-                                    "statement": "The nurse seemed annoyed when I asked questions",
-                                    "score": -0.4
+                                    "statement": "I was scared and nobody comforted me",
+                                    "score": -0.8
                                 },
                                 {
-                                    "statement": "I felt rushed during my consultation with the doctor",
-                                    "score": -0.5
+                                    "statement": "The doctor made me feel cared for and understood",
+                                    "score": 0.9
                                 },
                                 {
                                     "statement": "I felt like I was just another patient, not a priority",
-                                    "score": -0.6
+                                    "score": -0.7
                                 },
                                 {
-                                    "statement": "The doctor was late to the appointment",
-                                    "score": -0.3
+                                    "statement": "I felt comfortable discussing my health concerns",
+                                    "score": 0.8
                                 },
                                 {
-                                    "statement": "The receptionist seemed overworked and hurried",
-                                    "score": -0.5
-                                }
-                            ]
-                        },
-                        {
-                            "attribute": "Staff Kindness",
-                            "statements": [
-                                {
-                                    "statement": "The nurse was kind and made me feel at ease",
-                                    "score": 0.9
-                                },
-                                {
-                                    "statement": "The nurses are polite and professional, I feel safe here",
-                                    "score": 0.9
-                                },
-                                {
-                                    "statement": "The receptionist was friendly but seemed distracted",
-                                    "score": 0.1
-                                },
-                                {
-                                    "statement": "The receptionist was polite but not very helpful",
-                                    "score": -0.1
-                                },
-                                {
-                                    "statement": "The nurse was very professional and courteous",
+                                    "statement": "The doctor took extra care to make me feel comfortable",
                                     "score": 0.9
                                 }
                             ]
@@ -226,44 +237,27 @@
                     "attribute": "Cleanliness",
                     "tertiary_attributes": [
                         {
-                            "attribute": "Clinic Cleanliness",
+                            "attribute": "Overall Cleanliness",
                             "statements": [
                                 {
                                     "statement": "I love how clean the clinic was during my visit",
-                                    "score": 0.8
+                                    "score": 0.9
+                                },
+                                {
+                                    "statement": "The waiting room is dirty and crowded I'm scared to catch a disease",
+                                    "score": -0.9
+                                },
+                                {
+                                    "statement": "I was not impressed with the hygiene standards",
+                                    "score": -0.5
                                 },
                                 {
                                     "statement": "The clinic was clean and well-organized",
                                     "score": 0.9
                                 },
                                 {
-                                    "statement": "I was not impressed with the hygiene standards",
-                                    "score": -0.5
-                                }
-                            ]
-                        },
-                        {
-                            "attribute": "Waiting Room Condition",
-                            "statements": [
-                                {
-                                    "statement": "The waiting room was too crowded",
-                                    "score": -0.6
-                                },
-                                {
-                                    "statement": "The waiting area was cramped and uncomfortable",
-                                    "score": -0.6
-                                },
-                                {
-                                    "statement": "The waiting room was way too crowded",
-                                    "score": -0.7
-                                },
-                                {
-                                    "statement": "The waiting room is dirty and crowded I'm scared to catch a disease",
-                                    "score": -0.8
-                                },
-                                {
-                                    "statement": "The waiting room is dirty and crowded, I'm scared to catch a disease",
-                                    "score": -0.8
+                                    "statement": "The clinic had an outdated look but was clean",
+                                    "score": 0.1
                                 }
                             ]
                         }
@@ -273,23 +267,31 @@
                     "attribute": "Comfort",
                     "tertiary_attributes": [
                         {
-                            "attribute": "Seating Comfort",
+                            "attribute": "Waiting Area Comfort",
                             "statements": [
                                 {
                                     "statement": "The waiting area was cramped and uncomfortable",
                                     "score": -0.6
                                 },
                                 {
-                                    "statement": "The clinic needs better seating arrangements",
-                                    "score": -0.2
+                                    "statement": "The waiting room was too crowded",
+                                    "score": -0.6
                                 },
                                 {
                                     "statement": "The waiting room was comfortable, but a little crowded",
                                     "score": 0.2
                                 },
                                 {
-                                    "statement": "The chairs in the waiting room were uncomfortable",
+                                    "statement": "The waiting room was well-maintained",
+                                    "score": 0.6
+                                },
+                                {
+                                    "statement": "The waiting area was small and overcrowded",
                                     "score": -0.5
+                                },
+                                {
+                                    "statement": "The chairs in the waiting room were uncomfortable",
+                                    "score": -0.6
                                 }
                             ]
                         }
@@ -298,231 +300,91 @@
             ]
         },
         {
-            "primary_attribute": "Overall Experience",
+            "primary_attribute": "Billing and Transparency",
             "secondary_attributes": [
                 {
-                    "attribute": "Satisfaction",
+                    "attribute": "Billing Process",
                     "tertiary_attributes": [
                         {
-                            "attribute": "Positive Experiences",
+                            "attribute": "Transparency",
                             "statements": [
-                                {
-                                    "statement": "Staff was great! Love them",
-                                    "score": 1.0
-                                },
-                                {
-                                    "statement": "I love the doctor, he is so handsome",
-                                    "score": 1.0
-                                },
-                                {
-                                    "statement": "My kids love the doctor We feel great with this clinic",
-                                    "score": 1.0
-                                },
-                                {
-                                    "statement": "The doctor made me feel cared for and understood",
-                                    "score": 0.9
-                                },
-                                {
-                                    "statement": "I was pleased with the level of care I received",
-                                    "score": 0.8
-                                },
-                                {
-                                    "statement": "The clinic had a pleasant atmosphere",
-                                    "score": 0.8
-                                },
-                                {
-                                    "statement": "The doctor was very empathetic and listened to all my concerns",
-                                    "score": 0.9
-                                },
-                                {
-                                    "statement": "The front desk helped me understand my insurance coverage",
-                                    "score": 0.7
-                                },
-                                {
-                                    "statement": "The medical equipment seemed up to date",
-                                    "score": 0.5
-                                },
-                                {
-                                    "statement": "I got a text reminder before my visit, which was useful",
-                                    "score": 0.6
-                                },
                                 {
                                     "statement": "The billing process was transparent",
                                     "score": 0.6
                                 },
                                 {
-                                    "statement": "The doctor was gentle and thorough",
-                                    "score": 0.9
-                                },
-                                {
-                                    "statement": "I like that I can meet the same doctor again",
-                                    "score": 0.9
-                                },
-                                {
-                                    "statement": "The clinic had good access for people with disabilities",
-                                    "score": 0.7
-                                },
-                                {
-                                    "statement": "The clinic had a comfortable and welcoming environment",
-                                    "score": 0.9
-                                },
-                                {
-                                    "statement": "I felt comfortable discussing my health concerns",
-                                    "score": 0.8
-                                },
-                                {
-                                    "statement": "The doctor addressed all my questions without rushing",
-                                    "score": 0.9
-                                }
-                            ]
-                        },
-                        {
-                            "attribute": "Negative Experiences",
-                            "statements": [
-                                {
-                                    "statement": "I was scared and nobody comforted me",
-                                    "score": -0.9
-                                },
-                                {
-                                    "statement": "I was passed from person to person",
-                                    "score": -0.8
-                                },
-                                {
-                                    "statement": "I was asked for the same information multiple times",
-                                    "score": -0.5
-                                },
-                                {
-                                    "statement": "I felt rushed during my consultation with the doctor",
-                                    "score": -0.5
-                                },
-                                {
                                     "statement": "I was not informed about additional charges before my visit",
-                                    "score": -0.5
-                                },
-                                {
-                                    "statement": "The staff didn’t seem to be on the same page",
-                                    "score": -0.4
-                                },
-                                {
-                                    "statement": "The doctor didn’t make eye contact during the consultation",
-                                    "score": -0.3
+                                    "score": -0.6
                                 },
                                 {
                                     "statement": "The billing process took longer than expected",
                                     "score": -0.2
                                 },
                                 {
-                                    "statement": "The parking was a hassle",
-                                    "score": -0.6
+                                    "statement": "I wish there were more payment options available",
+                                    "score": -0.2
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "primary_attribute": "Accessibility",
+            "secondary_attributes": [
+                {
+                    "attribute": "Facility Access",
+                    "tertiary_attributes": [
+                        {
+                            "attribute": "Location",
+                            "statements": [
+                                {
+                                    "statement": "The facility was easy to access and well-located",
+                                    "score": 0.7
                                 },
                                 {
-                                    "statement": "The environment was noisy, making it hard to hear the receptionist",
-                                    "score": -0.6
+                                    "statement": "The doctor’s office was easy to find",
+                                    "score": 0.5
+                                },
+                                {
+                                    "statement": "The clinic was easy to find, located just off the main road",
+                                    "score": 0.6
+                                },
+                                {
+                                    "statement": "The location of the clinic is a bit far from my house",
+                                    "score": -0.3
+                                },
+                                {
+                                    "statement": "The location was ideal, close to public transport",
+                                    "score": 0.7
+                                },
+                                {
+                                    "statement": "The clinic is too far from public transport stops",
+                                    "score": -0.4
+                                },
+                                {
+                                    "statement": "The clinic was conveniently located in a central area",
+                                    "score": 0.8
+                                },
+                                {
+                                    "statement": "The clinic should open earlier on weekends for people who need quick visits",
+                                    "score": 0.3
+                                },
+                                {
+                                    "statement": "The clinic had good access for people with disabilities",
+                                    "score": 0.7
                                 },
                                 {
                                     "statement": "The clinic was hard to find, no clear signs",
-                                    "score": -0.7
-                                },
-                                {
-                                    "statement": "The receptionist gave me the wrong information about my appointment",
-                                    "score": -0.8
-                                },
-                                {
-                                    "statement": "I was asked unnecessary personal questions",
-                                    "score": -0.6
-                                },
-                                {
-                                    "statement": "The doctor was running behind schedule",
-                                    "score": -0.4
-                                },
-                                {
-                                    "statement": "I didn’t receive any updates about the delay",
                                     "score": -0.5
-                                },
-                                {
-                                    "statement": "The lack of specialist services at this clinic is disappointing",
-                                    "score": -0.8
                                 }
                             ]
                         }
                     ]
-                }
-            ]
-        },
-        {
-            "primary_attribute": "Digital Experience",
-            "secondary_attributes": [
+                },
                 {
-                    "attribute": "Patient Portal Functionality",
-                    "tertiary_attributes": [
-                        {
-                            "attribute": "Access to Medical Records",
-                            "statements": [
-                                {
-                                    "statement": "The website should allow me to view and print my patient records",
-                                    "score": 0.3
-                                },
-                                {
-                                    "statement": "The patient portal is outdated and lacks proper functionality",
-                                    "score": -0.7
-                                },
-                                {
-                                    "statement": "I expected to see my complete medical history online, but it wasn’t there",
-                                    "score": -0.7
-                                },
-                                {
-                                    "statement": "The website should provide more detailed FAQs about medical records access",
-                                    "score": -0.3
-                                }
-                            ]
-                        },
-                        {
-                            "attribute": "Specialist Information",
-                            "statements": [
-                                {
-                                    "statement": "I wish they had more information on specialists and available treatments",
-                                    "score": -0.4
-                                },
-                                {
-                                    "statement": "The lack of integration between the patient portal and clinic services is frustrating",
-                                    "score": -0.8
-                                },
-                                {
-                                    "statement": "I wasn't able to schedule a visit with a specialist because none were available",
-                                    "score": -0.6
-                                },
-                                {
-                                    "statement": "Specialist care is not available at this clinic, which is a major limitation",
-                                    "score": -0.7
-                                },
-                                {
-                                    "statement": "The website could provide more comprehensive details about the doctors",
-                                    "score": -0.4
-                                }
-                            ]
-                        },
-                        {
-                            "attribute": "Messaging and Communication",
-                            "statements": [
-                                {
-                                    "statement": "The website should support secure messaging with healthcare providers",
-                                    "score": 0.3
-                                },
-                                {
-                                    "statement": "There should be a feature to access my prescription history online",
-                                    "score": 0.3
-                                }
-                            ]
-                        }
-                    ]
-                }
-            ]
-        },
-        {
-            "primary_attribute": "Facility Location",
-            "secondary_attributes": [
-                {
-                    "attribute": "Accessibility",
+                    "attribute": "Parking",
                     "tertiary_attributes": [
                         {
                             "attribute": "Parking Availability",
@@ -536,93 +398,117 @@
                                     "score": -0.4
                                 },
                                 {
-                                    "statement": "The clinic needs better lighting in the parking area",
-                                    "score": -0.3
-                                }
-                            ]
-                        },
-                        {
-                            "attribute": "Public Transport Access",
-                            "statements": [
-                                {
-                                    "statement": "The location of the clinic is a bit far from my house",
-                                    "score": -0.2
+                                    "statement": "The parking was a hassle",
+                                    "score": -0.6
                                 },
                                 {
-                                    "statement": "The clinic is too far from public transport stops",
+                                    "statement": "I had to walk a long way from the parking lot to the entrance",
                                     "score": -0.4
                                 },
                                 {
-                                    "statement": "The location was ideal, close to public transport",
-                                    "score": 0.8
-                                }
-                            ]
-                        },
-                        {
-                            "attribute": "Signage and Directions",
-                            "statements": [
-                                {
-                                    "statement": "The signs for directions within the building were not clear",
-                                    "score": -0.5
-                                },
-                                {
-                                    "statement": "The clinic was hard to locate because of poor signage",
-                                    "score": -0.6
+                                    "statement": "The clinic needs better lighting in the parking area",
+                                    "score": -0.2
                                 }
                             ]
                         }
                     ]
-                },
+                }
+            ]
+        },
+        {
+            "primary_attribute": "Patient Portal",
+            "secondary_attributes": [
                 {
-                    "attribute": "Convenience",
+                    "attribute": "Functionality",
                     "tertiary_attributes": [
                         {
-                            "attribute": "Opening Hours",
+                            "attribute": "Access to Records",
                             "statements": [
                                 {
-                                    "statement": "The clinic's opening hours are very convenient for my schedule",
-                                    "score": 0.6
+                                    "statement": "The website should allow me to view and print my patient records",
+                                    "score": 0.4
                                 },
                                 {
-                                    "statement": "The opening hours are great, especially the weekend availability",
-                                    "score": 0.8
+                                    "statement": "The website should provide more detailed FAQs about medical records access",
+                                    "score": 0.2
                                 },
                                 {
-                                    "statement": "The opening hours are too limited, hard to find a suitable time",
+                                    "statement": "I expected to see my complete medical history online, but it wasn’t there",
+                                    "score": -0.7
+                                },
+                                {
+                                    "statement": "The patient journal integration is missing, which caused confusion during my visit",
+                                    "score": -0.6
+                                },
+                                {
+                                    "statement": "I couldn't find my medical history on the patient portal",
                                     "score": -0.5
                                 },
                                 {
-                                    "statement": "The clinic should consider extending its opening hours in the evening",
+                                    "statement": "The lack of integration between the clinic’s website and patient records",
+                                    "score": -0.6
+                                },
+                                {
+                                    "statement": "I wish I could access my test results directly on the website",
                                     "score": -0.3
                                 },
                                 {
-                                    "statement": "The opening hours are not suitable for people who work 9 to 5",
+                                    "statement": "I couldn't see my past visits on the website, which was inconvenient",
                                     "score": -0.5
-                                },
-                                {
-                                    "statement": "The clinic should open earlier on weekends for people who need quick visits",
-                                    "score": -0.2
                                 }
                             ]
                         },
                         {
-                            "attribute": "Location Convenience",
+                            "attribute": "User Experience",
                             "statements": [
                                 {
-                                    "statement": "The clinic was conveniently located in a central area",
-                                    "score": 0.6
+                                    "statement": "The patient portal is outdated and lacks proper functionality",
+                                    "score": -0.7
                                 },
                                 {
-                                    "statement": "The clinic is in a quiet location, which I appreciated",
-                                    "score": 0.5
+                                    "statement": "The website should be more user-friendly for older patients",
+                                    "score": 0.1
                                 },
                                 {
-                                    "statement": "The clinic was easy to find, located just off the main road",
-                                    "score": 0.5
+                                    "statement": "The website could provide more comprehensive details about the doctors",
+                                    "score": -0.1
                                 },
                                 {
-                                    "statement": "The location was okay, but the traffic made it difficult to reach",
+                                    "statement": "The lack of integration between the patient portal and clinic services is frustrating",
+                                    "score": -0.8
+                                },
+                                {
+                                    "statement": "The website is very basic and lacks detailed information about services",
+                                    "score": -0.5
+                                },
+                                {
+                                    "statement": "There should be a way to communicate with specialists through the portal",
+                                    "score": -0.1
+                                }
+                            ]
+                        },
+                        {
+                            "attribute": "Specialist Information",
+                            "statements": [
+                                {
+                                    "statement": "I wish they had more information on specialists and available treatments",
                                     "score": -0.2
+                                },
+                                {
+                                    "statement": "The clinic doesn't offer specialized care, which limits treatment options",
+                                    "score": -0.6
+                                },
+                                {
+                                    "statement": "Specialist care is not available at this clinic, which is a major limitation",
+                                    "score": -0.7
+                                },
+                                {
+                                    "statement": "I wasn't able to schedule a visit with a specialist because none were available",
+                                    "score": -0.5
+                                },
+                                {
+                                    "statement": "The clinic's website lacks important information about specialist care",
+                                    "score": -0.4
                                 }
                             ]
                         }

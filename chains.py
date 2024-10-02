@@ -11,9 +11,9 @@ from models import (
     CustomerAttributes,
     BusinessAnalysis,
     PrimaryAttribute,
+    SecondaryAttribute
 )
 from config import get_openai_api_key
-import math
 import time
 import re
 
@@ -200,13 +200,16 @@ def batch_attribute_sentiments(
     ]
 
 
-def create_attribute_chain(existing_attributes_json: str) -> RunnableSequence:
+def create_attribute_chain(
+    existing_attributes_json: str, domain: str
+) -> RunnableSequence:
     """
     Create an attribute derivation chain with a nested attribute structure.
     Incorporates batch processing and global context to ensure consistency across batches.
 
     Args:
         existing_attributes_json (str): JSON string of the attributes identified so far.
+        domain (str): The domain for analysis.
 
     Returns:
         RunnableSequence: The attribute derivation chain.
@@ -220,29 +223,33 @@ def create_attribute_chain(existing_attributes_json: str) -> RunnableSequence:
     # Define the prompt template with placeholders for format instructions and sentiment results
     attribute_prompt_template = ChatPromptTemplate.from_template(
         """
-    Based on the statements and sentiment analysis provided, assign each statement to the most appropriate existing customer attribute or create a new one if necessary. Use the Quality Function Deployment (QFD) approach to ensure that customer needs and expectations are incorporated into the final design of the service. Structure the attributes in a three-level hierarchy (primary, secondary, tertiary) with associated customer statements and their sentiment scores.
+Based on the statements and sentiment analysis provided, assign each statement to the most appropriate existing customer attribute or create a new one if necessary. Use the Quality Function Deployment (QFD) approach to ensure that customer needs and expectations are incorporated into the final design of the service. Structure the attributes in a three-level hierarchy (primary, secondary, tertiary) with associated customer statements and their sentiment scores.
 
-    **Existing Attributes:**
-    {existing_attributes}
+**Existing Attributes:**
+{existing_attributes}
 
-    **Instructions:**
-    - Use the existing attributes where appropriate.
-    - Only create new attributes if a statement does not fit into any existing attribute.
-    - Ensure attribute names are consistent and unique within their respective levels.
-    - Each customer statement must be assigned to one and only one tertiary attribute.
-    - The structure should be comprehensive and professionally worded relevant to the {domain} domain.
-    - Do not leave any statements unassigned.
+**Instructions:**
+- Use the existing attributes where appropriate.
+- Only create new attributes if a statement does not fit into any existing attribute.
+- Ensure attribute names are consistent and unique within their respective levels.
+- Each customer statement must be assigned to one and only one tertiary attribute.
+- The structure should be comprehensive and professionally worded relevant to the {domain} domain.
+- Do not leave any statements unassigned.
 
-    **Example Output:**
-    (Your escaped JSON example here)
+**Example Output:**
+(Your escaped JSON example here)
 
-    Please return the results in the following format:
-    {format_instructions}
+Please return the results in the following format:
+{format_instructions}
 
-    Sentiment Analysis Results:
-    {sentiment_results}
+Sentiment Analysis Results:
+{sentiment_results}
         """
-    ).partial(format_instructions=format_instructions)
+    ).partial(
+        format_instructions=format_instructions,
+        existing_attributes=existing_attributes_json,
+        domain=domain,
+    )
 
     # Define the sequence
     attribute_sequence = RunnableSequence(
@@ -255,7 +262,7 @@ def create_attribute_chain(existing_attributes_json: str) -> RunnableSequence:
 
 
 def process_attribute_derivation(
-    attribute_chain: Callable[..., RunnableSequence],
+    create_attribute_chain: Callable[..., RunnableSequence],
     sentiment_results: List[Dict],
     domain: str,
 ) -> List[PrimaryAttribute]:
@@ -264,7 +271,7 @@ def process_attribute_derivation(
     Maintains a global attribute list for consistency across batches.
 
     Args:
-        attribute_chain (Callable[..., RunnableSequence]): Function to create the attribute derivation chain.
+        create_attribute_chain (Callable[..., RunnableSequence]): Function to create the attribute derivation chain.
         sentiment_results (List[Dict]): List of sentiment analysis results.
         domain (str): The domain for analysis.
 
@@ -287,19 +294,14 @@ def process_attribute_derivation(
                 existing_attributes_json = json.dumps(
                     [attr.dict() for attr in global_attributes],
                     indent=2,
-                    ensure_ascii=False
+                    ensure_ascii=False,
                 )
 
-                # Create the attribute chain with the existing attributes
-                chain = create_attribute_chain(existing_attributes_json)
+                # Create the attribute chain with the existing attributes and domain
+                chain = create_attribute_chain(existing_attributes_json, domain)
 
-                batch_output = chain.invoke(
-                    {
-                        "sentiment_results": json.dumps(batch),
-                        "domain": domain,
-                        "existing_attributes": existing_attributes_json,
-                    }
-                )
+                batch_output = chain.invoke({"sentiment_results": json.dumps(batch)})
+
                 if not batch_output:
                     raise ValueError("No attribute results obtained for the batch.")
 
@@ -312,7 +314,9 @@ def process_attribute_derivation(
                 batch_attributes = parsed_results.attributes
 
                 # Merge batch attributes with global attributes
-                global_attributes = merge_attributes(global_attributes + batch_attributes)
+                global_attributes = merge_attributes(
+                    global_attributes + batch_attributes
+                )
 
                 logger.info(f"Attribute derivation batch {idx} processed successfully.")
                 break  # Exit the retry loop on success
@@ -331,9 +335,95 @@ def process_attribute_derivation(
                     )
                     break
 
-    # Final verification
-    # Ensure that each sentiment result is attributed to one tertiary attribute
-    # (Same as before)
+    # Final verification and any additional processing
+    logger.info("Performing final verification of attributed statements.")
+
+    # Collect all attributed statements
+    attributed_statements = set()
+    for primary_attr in global_attributes:
+        for secondary_attr in primary_attr.secondary_attributes:
+            for tertiary_attr in secondary_attr.tertiary_attributes:
+                for stmt in tertiary_attr.statements:
+                    attributed_statements.add(stmt.statement.strip())
+
+    # Collect all original statements
+    original_statements = set(item["statement"].strip() for item in sentiment_results)
+
+    # Identify unassigned statements
+    unassigned_statements = original_statements - attributed_statements
+
+    if unassigned_statements:
+        logger.warning(
+            f"{len(unassigned_statements)} statements were not attributed. Assigning them to 'Uncategorized'."
+        )
+        logger.debug(f"Unassigned Statements: {unassigned_statements}")
+
+        # Create an 'Uncategorized' attribute if it doesn't exist
+        uncategorized_primary = None
+        for primary_attr in global_attributes:
+            if primary_attr.primary_attribute.lower() == "uncategorized":
+                uncategorized_primary = primary_attr
+                break
+
+        if not uncategorized_primary:
+            uncategorized_primary = PrimaryAttribute(
+                primary_attribute="Uncategorized", secondary_attributes=[]
+            )
+            global_attributes.append(uncategorized_primary)
+
+        # Create a secondary attribute under 'Uncategorized' if needed
+        uncategorized_secondary = None
+        if uncategorized_primary.secondary_attributes:
+            uncategorized_secondary = uncategorized_primary.secondary_attributes[0]
+        else:
+            uncategorized_secondary = SecondaryAttribute(
+                attribute="Uncategorized", tertiary_attributes=[]
+            )
+            uncategorized_primary.secondary_attributes.append(uncategorized_secondary)
+
+        # Create a tertiary attribute for unassigned statements
+        uncategorized_tertiary = TertiaryAttribute(
+            attribute="Uncategorized",
+            statements=[
+                Statement(statement=stmt, score=0.0) for stmt in unassigned_statements
+            ],
+        )
+        uncategorized_secondary.tertiary_attributes.append(uncategorized_tertiary)
+
+        logger.info(
+            "Unassigned statements have been added to 'Uncategorized' attribute."
+        )
+    else:
+        logger.info("All statements have been attributed.")
+
+    # Check for duplicate statements assigned to multiple attributes
+    statement_assignments = {}
+    duplicates_found = False
+    for primary_attr in global_attributes:
+        for secondary_attr in primary_attr.secondary_attributes:
+            for tertiary_attr in secondary_attr.tertiary_attributes:
+                for stmt in tertiary_attr.statements:
+                    stmt_text = stmt.statement.strip()
+                    attr_path = (
+                        primary_attr.primary_attribute,
+                        secondary_attr.attribute,
+                        tertiary_attr.attribute,
+                    )
+                    if stmt_text not in statement_assignments:
+                        statement_assignments[stmt_text] = attr_path
+                    else:
+                        duplicates_found = True
+                        logger.warning(
+                            f"Duplicate statement detected: '{stmt_text}' is assigned to multiple attributes: "
+                            f"{statement_assignments[stmt_text]} and {attr_path}"
+                        )
+                        # Optionally, remove the duplicate or decide which assignment to keep
+
+    if not duplicates_found:
+        logger.info("No duplicate statements found across attributes.")
+
+    # Additional processing can include validating attribute names, ensuring no empty attributes, etc.
+    # For now, we'll return the global_attributes as is.
 
     return global_attributes
 
@@ -357,7 +447,10 @@ def merge_attributes(attributes_list: List[PrimaryAttribute]) -> List[PrimaryAtt
         else:
             existing_primary = primary_attr_map[primary_name]
             # Merge secondary attributes
-            secondary_attr_map = {sec.attribute.strip().lower(): sec for sec in existing_primary.secondary_attributes}
+            secondary_attr_map = {
+                sec.attribute.strip().lower(): sec
+                for sec in existing_primary.secondary_attributes
+            }
             for sec_attr in primary_attr.secondary_attributes:
                 sec_name = sec_attr.attribute.strip().lower()
                 if sec_name not in secondary_attr_map:
@@ -365,7 +458,10 @@ def merge_attributes(attributes_list: List[PrimaryAttribute]) -> List[PrimaryAtt
                 else:
                     existing_secondary = secondary_attr_map[sec_name]
                     # Merge tertiary attributes
-                    tertiary_attr_map = {ter.attribute.strip().lower(): ter for ter in existing_secondary.tertiary_attributes}
+                    tertiary_attr_map = {
+                        ter.attribute.strip().lower(): ter
+                        for ter in existing_secondary.tertiary_attributes
+                    }
                     for ter_attr in sec_attr.tertiary_attributes:
                         ter_name = ter_attr.attribute.strip().lower()
                         if ter_name not in tertiary_attr_map:
@@ -373,11 +469,15 @@ def merge_attributes(attributes_list: List[PrimaryAttribute]) -> List[PrimaryAtt
                         else:
                             existing_tertiary = tertiary_attr_map[ter_name]
                             # Merge statements
-                            existing_statements = {stmt.statement for stmt in existing_tertiary.statements}
+                            existing_statements = {
+                                stmt.statement for stmt in existing_tertiary.statements
+                            }
                             for stmt in ter_attr.statements:
                                 if stmt.statement not in existing_statements:
                                     existing_tertiary.statements.append(stmt)
-                    existing_secondary.tertiary_attributes = list(tertiary_attr_map.values())
+                    existing_secondary.tertiary_attributes = list(
+                        tertiary_attr_map.values()
+                    )
             existing_primary.secondary_attributes = list(secondary_attr_map.values())
 
     return list(primary_attr_map.values())

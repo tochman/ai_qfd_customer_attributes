@@ -1,7 +1,7 @@
 # analysis.py
 
 from typing import List, Dict
-from models import PrimaryAttribute, SentimentResult
+from models import PrimaryAttribute
 import logging
 
 logger = logging.getLogger()
